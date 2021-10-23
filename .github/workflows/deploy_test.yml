@@ -22,6 +22,7 @@ jobs:
           mkdir -p .envs/.production
           touch .envs/.production/.ipharm_app
           echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY_DEV }}" >>  .envs/.production/.ipharm_app
+          echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_ADMIN_DOMAIN }},${{ secrets.TEST_IPHARM_API_DOMAIN }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm_postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
