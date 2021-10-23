@@ -1,19 +1,19 @@
 version: "3"
 services:
-  ipharm-app:
+  ipharm_app:
     container_name: ipharm_app
     image: conceptica/ipharm_app:test
     restart: unless-stopped
     depends_on:
-      -  ipharm-postgres
+      -  ipharm_postgres
     env_file:
       - .envs/.production/.ipharm_app
       - .envs/.production/.ipharm_postgres
-    command: gunicorn ipharm_web.wsgi:application --bind 0.0.0.0:8001
+    command: scripts/start_production.sh
     volumes:
       - ./ipharm_static:/app/static
 
-  ipharm-postgres:
+  ipharm_postgres:
     container_name: ipharm_postgres
     image: postgres:13.4-alpine
     restart: unless-stopped
@@ -35,4 +35,4 @@ services:
       - 80:80
       - 443:443
     depends_on:
-      - ipharm-app
+      - ipharm_app
