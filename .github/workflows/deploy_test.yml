@@ -21,16 +21,32 @@ jobs:
         run: |
           mkdir -p .envs/.production
           touch .envs/.production/.ipharm_app
-          echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY_DEV }}" >>  .envs/.production/.ipharm_app
+          echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY }}" >>  .envs/.production/.ipharm_app
           echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
+          echo "REFERENCES_TOKEN=${{ secrets.REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm_postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_DB=ipharm >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_USER=ipharm >>  .envs/.production/.ipharm_postgres
           echo "POSTGRES_PASSWORD=${{ secrets.TEST_IPHARM_POSTGRES_PASSWORD }}" >>  .envs/.production/.ipharm_postgres
+          touch .envs/.production/.ipharm_redis
+          echo REDIS_HOST=ipharm-redis >>  .envs/.production/.ipharm_redis
+          echo REDIS_PORT=6379 >>  .envs/.production/.ipharm_redis
+          echo CELERY_BROKER_URL=redis://ipharm-redis:6379/1 >>  .envs/.production/.ipharm_redis
+          echo "FLOWER_BASIC_AUTH=${{ secrets.TEST_IPHARM_FLOWER_AUTH }}" >>  .envs/.production/.ipharm_redis
+          touch .envs/.production/.iciselniky_app
+          echo "SECRET_KEY=${{ secrets.TEST_ICISELNIKY_SECRET_KEY }}" >>  .envs/.production/.iciselniky_app
+          echo "ALLOWED_HOSTS=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.iciselniky_app
+          touch .envs/.production/.iciselniky_postgres
+          echo POSTGRES_HOST=iciselniky_postgres >>  .envs/.production/.iciselniky_postgres
+          echo POSTGRES_PORT=5432 >>  .envs/.production/.iciselniky_postgres
+          echo POSTGRES_DB=iciselniky >>  .envs/.production/.iciselniky_postgres
+          echo POSTGRES_USER=iciselniky >>  .envs/.production/.iciselniky_postgres
+          echo "POSTGRES_PASSWORD=${{ secrets.TEST_ICISELNIKY_POSTGRES_PASSWORD }}" >>  .envs/.production/.iciselniky_postgres
           touch .envs/.production/.nginx
           echo "IPHARM_DOMAIN=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "ICISELNIKY_DOMAIN=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.nginx
       - name: Create key
         run: |
           mkdir ~/.ssh/
