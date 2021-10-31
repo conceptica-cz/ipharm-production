@@ -24,6 +24,9 @@
       with_items:
         - ./.envs/.production/.ipharm_app
         - ./.envs/.production/.ipharm_postgres
+        - ./.envs/.production/.ipharm_redis
+        - ./.envs/.production/.iciselniky_app
+        - ./.envs/.production/.iciselniky_postgres
         - ./.envs/.production/.nginx
 
     - name: Create ngingx directory
