@@ -11,7 +11,7 @@ services:
       - .envs/.production/.ipharm_redis
     ports:
       - "8000:8000"
-    command: scripts/start.sh
+    command: scripts/start_production.sh
     volumes:
       - ./ipharm_static:/app/static
 
@@ -56,7 +56,7 @@ services:
       - .envs/.production/.iciselniky_postgres
     ports:
       - "8001:8000"
-    command: scripts/start.sh
+    command: scripts/start_production.sh
     volumes:
       - ./iciselniky_static:/app/static
 
