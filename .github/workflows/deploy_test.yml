@@ -23,7 +23,10 @@ jobs:
           touch .envs/.production/.ipharm_app
           echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY }}" >>  .envs/.production/.ipharm_app
           echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
+          echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo "REFERENCES_TOKEN=${{ secrets.REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
+          echo "BASE_REFERENCES_URL=${{ secrets.BASE_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm_postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
