@@ -25,7 +25,7 @@ services:
     command: scripts/start_worker.sh
 
   ipharm-beat:
-    container_name: ipharm_beat_dev
+    container_name: ipharm_beat
     image: conceptica/ipharm_app:test
     depends_on:
       - ipharm-postgres
