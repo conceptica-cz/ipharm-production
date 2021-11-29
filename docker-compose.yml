@@ -24,6 +24,15 @@ services:
     env_file: *envs-ipharm-app
     command: scripts/start_worker.sh
 
+  ipharm-beat:
+    container_name: ipharm_beat_dev
+    image: conceptica/ipharm_app:test
+    depends_on:
+      - ipharm-postgres
+      - ipharm-redis
+    env_file: *envs-ipharm-app
+    command: scripts/start_beat.sh
+
   ipharm-postgres:
     container_name: ipharm_postgres
     image: postgres:13.4-alpine
