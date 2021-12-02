@@ -25,8 +25,8 @@ jobs:
           echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
-          echo "REFERENCES_TOKEN=${{ secrets.REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
-          echo "BASE_REFERENCES_URL=${{ secrets.BASE_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
+          echo "REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
+          echo "BASE_REFERENCES_URL=${{ secrets.TEST_IPHARM_BASE_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm_postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
@@ -41,6 +41,8 @@ jobs:
           touch .envs/.production/.iciselniky_app
           echo "SECRET_KEY=${{ secrets.TEST_ICISELNIKY_SECRET_KEY }}" >>  .envs/.production/.iciselniky_app
           echo "ALLOWED_HOSTS=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.iciselniky_app
+          echo "REFERENCES_TOKEN=${{ secrets.TEST_ICISELNIKY_REFERENCES_TOKEN }}" >>  .envs/.production/.iciselniky_app
+          echo "BASE_REFERENCES_URL=${{ secrets.TEST_ICISELNIKY_BASE_REFERENCES_URL }}" >>  .envs/.production/.iciselniky_app
           touch .envs/.production/.iciselniky_postgres
           echo POSTGRES_HOST=iciselniky_postgres >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.iciselniky_postgres
