@@ -23,7 +23,7 @@ jobs:
           touch .envs/.production/.ipharm_app
           echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY }}" >>  .envs/.production/.ipharm_app
           echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
+          echo "SENTRY_DSN=${{ secrets.TEST_IPHARM_SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo "REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
           echo "BASE_PATIENT_URL=${{ secrets.TEST_BASE_PATIENT_URL }}" >>  .envs/.production/.ipharm_app
@@ -42,6 +42,8 @@ jobs:
           touch .envs/.production/.iciselniky_app
           echo "SECRET_KEY=${{ secrets.TEST_ICISELNIKY_SECRET_KEY }}" >>  .envs/.production/.iciselniky_app
           echo "ALLOWED_HOSTS=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.iciselniky_app
+          echo "SENTRY_DSN=${{ secrets.TEST_ICISELNIKY_SENTRY_DSN }}" >>  .envs/.production/.iciselniky_app
+          echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.iciselniky_app
           echo "REFERENCES_TOKEN=${{ secrets.TEST_ICISELNIKY_REFERENCES_TOKEN }}" >>  .envs/.production/.iciselniky_app
           echo "BASE_REFERENCES_URL=${{ secrets.TEST_ICISELNIKY_BASE_REFERENCES_URL }}" >>  .envs/.production/.iciselniky_app
           echo "DIAGNOSES_URL=${{ secrets.TEST_ICISELNIKY_DIAGNOSES_URL }}" >>  .envs/.production/.iciselniky_app
@@ -51,6 +53,10 @@ jobs:
           echo POSTGRES_DB=iciselniky >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_USER=iciselniky >>  .envs/.production/.iciselniky_postgres
           echo "POSTGRES_PASSWORD=${{ secrets.TEST_ICISELNIKY_POSTGRES_PASSWORD }}" >>  .envs/.production/.iciselniky_postgres
+          touch .envs/.production/.iciselniky_redis
+          echo REDIS_HOST=iciselniky-redis >>  .envs/.production/.iciselniky_redis
+          echo REDIS_PORT=6379 >>  .envs/.production/.iciselniky_redis
+          echo CELERY_BROKER_URL=redis://iciselniky-redis:6379/1 >>  .envs/.production/.iciselniky_redis
           touch .envs/.production/.nginx
           echo "IPHARM_DOMAIN=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_DOMAIN=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.nginx

@@ -27,6 +27,7 @@
         - ./.envs/.production/.ipharm_redis
         - ./.envs/.production/.iciselniky_app
         - ./.envs/.production/.iciselniky_postgres
+        - ./.envs/.production/.iciselniky_redis
         - ./.envs/.production/.nginx
 
     - name: Create ngingx directory
