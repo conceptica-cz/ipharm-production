@@ -47,6 +47,7 @@ jobs:
           echo "REFERENCES_TOKEN=${{ secrets.TEST_ICISELNIKY_REFERENCES_TOKEN }}" >>  .envs/.production/.iciselniky_app
           echo "BASE_REFERENCES_URL=${{ secrets.TEST_ICISELNIKY_BASE_REFERENCES_URL }}" >>  .envs/.production/.iciselniky_app
           echo "DIAGNOSES_URL=${{ secrets.TEST_ICISELNIKY_DIAGNOSES_URL }}" >>  .envs/.production/.iciselniky_app
+          echo "MEDICAL_FACILITIES_URL=${{ secrets.TEST_ICISELNIKY_MEDICAL_FACILITIES_URL }}" >>  .envs/.production/.iciselniky_app
           touch .envs/.production/.iciselniky_postgres
           echo POSTGRES_HOST=iciselniky_postgres >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.iciselniky_postgres
