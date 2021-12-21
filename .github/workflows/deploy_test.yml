@@ -25,6 +25,7 @@ jobs:
           echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
           echo "SENTRY_DSN=${{ secrets.TEST_IPHARM_SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
+          echo LOG_LEVEL=DEBUG >>  .envs/.production/.ipharm_app
           echo "REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
           echo "BASE_PATIENT_URL=${{ secrets.TEST_BASE_PATIENT_URL }}" >>  .envs/.production/.ipharm_app
           echo "BASE_REFERENCES_URL=${{ secrets.TEST_IPHARM_BASE_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
@@ -44,6 +45,7 @@ jobs:
           echo "ALLOWED_HOSTS=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.iciselniky_app
           echo "SENTRY_DSN=${{ secrets.TEST_ICISELNIKY_SENTRY_DSN }}" >>  .envs/.production/.iciselniky_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.iciselniky_app
+          echo LOG_LEVEL=DEBUG >>  .envs/.production/.iciselniky_app
           echo "REFERENCES_TOKEN=${{ secrets.TEST_ICISELNIKY_REFERENCES_TOKEN }}" >>  .envs/.production/.iciselniky_app
           echo "BASE_REFERENCES_URL=${{ secrets.TEST_ICISELNIKY_BASE_REFERENCES_URL }}" >>  .envs/.production/.iciselniky_app
           echo "DIAGNOSES_URL=${{ secrets.TEST_ICISELNIKY_DIAGNOSES_URL }}" >>  .envs/.production/.iciselniky_app
