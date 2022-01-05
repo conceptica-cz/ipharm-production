@@ -9,7 +9,7 @@
 
     - name: Copy docker-compose
       copy:
-        src: docker-compose.yml
+        src: docker-compose.test.yml
         dest: "{{ project_dir + '/docker-compose.yml' }}"
 
     - name: Create envs directory
