@@ -10,6 +10,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install ansible
         run: sudo apt-get install ansible
+      - name: Install openvpn
+        run: sudo apt-get install openvpn -y
+      - name: Create openvpn config
+        run: echo "${{ secrets.VPN_CONFIG }}" >>  vpnconfig.ovpn
       - name:  Create env files
         run: |
           mkdir -p .envs/.production
@@ -68,6 +72,9 @@ jobs:
           touch hosts
           echo "[ipharm]" >> hosts
           echo "${{ secrets.TEST_HOST }} ansible_user=${{ secrets.TEST_USER }} ansible_ssh_private_key_file=~/.ssh/ed25519 project_dir=${{ secrets.TEST_PROJECT_DIRECTORY }}" >> hosts
+      - name: Run openvpn
+        run: |
+          sudo openvpn --config vpnconfig.ovpn --daemon
       - name: Deploy
         run: |
           export ANSIBLE_HOST_KEY_CHECKING=False
