@@ -23,9 +23,10 @@ jobs:
           echo "SENTRY_DSN=${{ secrets.TEST_IPHARM_SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo LOG_LEVEL=DEBUG >>  .envs/.production/.ipharm_app
-          echo "REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
-          echo "BASE_PATIENT_URL=${{ secrets.TEST_BASE_PATIENT_URL }}" >>  .envs/.production/.ipharm_app
+          echo "BASE_IPHARM_REFERENCES_URL=${{ secrets.TEST_IPHARM_BASE_IPHARM_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
+          echo "IPHARM_REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
           echo "BASE_REFERENCES_URL=${{ secrets.TEST_IPHARM_BASE_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
+          echo "REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm_postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
