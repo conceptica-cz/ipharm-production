@@ -76,6 +76,10 @@ jobs:
       - name: Run openvpn
         run: |
           sudo openvpn --config vpnconfig.ovpn --daemon
+      - name: Wait openvpn connection
+        timeout-minutes: 1
+        run: until ping -c1 ${{ secrets.TEST_HOST }}; do sleep 2; done
+
       - name: Deploy
         run: |
           export ANSIBLE_HOST_KEY_CHECKING=False
