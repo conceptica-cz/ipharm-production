@@ -120,9 +120,9 @@ services:
   frontend-app:
     container_name: frontend_app
     image: conceptica/ipharm_fe_app:test
+    command: cp -r ./build /frontend
     volumes:
-      - ./frontend:/usr/src/app/dist
-    command: npm run build
+      - ./frontend:/frontend
 
   nginx:
     container_name: ipharm_nginx
@@ -133,7 +133,7 @@ services:
       - ./ipharm_static:/ipharm_static
       - ./ipharm_media:/ipharm_media
       - ./iciselniky_static:/iciselniky_static
-      - ./frontend:/frontend
+      - ./frontend/:/frontend
     env_file:
       - .envs/.production/.nginx
     ports:
