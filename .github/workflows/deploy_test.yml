@@ -21,6 +21,7 @@ jobs:
           echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY }}" >>  .envs/.production/.ipharm_app
           echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
           echo "SENTRY_DSN=${{ secrets.TEST_IPHARM_SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
+          echo "CORS_ALLOWED_ORIGINS=${{ secrets.TEST_CORS_ALLOWED_ORIGINS }}" >>  .envs/.production/.ipharm_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo LOG_LEVEL=DEBUG >>  .envs/.production/.ipharm_app
           echo "BASE_IPHARM_REFERENCES_URL=${{ secrets.TEST_IPHARM_BASE_IPHARM_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
