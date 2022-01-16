@@ -1,7 +1,6 @@
 version: "3"
 services:
   ipharm-app:
-    container_name: ipharm_app
     image: conceptica/ipharm_app:demo
     depends_on:
       - ipharm-postgres
@@ -17,7 +16,6 @@ services:
       - ./ipharm_media:/app/media
 
   ipharm-worker:
-    container_name: ipharm_worker
     image: conceptica/ipharm_app:demo
     depends_on:
       - ipharm-postgres
@@ -27,7 +25,6 @@ services:
     command: scripts/start_worker.sh
 
   ipharm-beat:
-    container_name: ipharm_beat
     image: conceptica/ipharm_app:demo
     depends_on:
       - ipharm-postgres
@@ -37,7 +34,6 @@ services:
     command: scripts/start_beat.sh
 
   ipharm-postgres:
-    container_name: ipharm_postgres
     image: postgres:13.4-alpine
     env_file:
       - .envs/.production/.ipharm_postgres
@@ -45,12 +41,10 @@ services:
       - ./_postgres_data_ipharm:/var/lib/postgresql/data
 
   ipharm-redis:
-    container_name: ipharm_redis
     image: redis:6.2-alpine
 
   ipharm-flower:
     image: mher/flower
-    container_name: ipharm_flower
     env_file:
       -  .envs/.production/.ipharm_redis
     ports:
@@ -59,7 +53,6 @@ services:
       - ipharm-redis
 
   iciselniky-app:
-    container_name: iciselniky_app
     image: conceptica/iciselniky_app:demo
     depends_on:
       - iciselniky-postgres
@@ -74,7 +67,6 @@ services:
       - ./iciselniky_static:/app/static
 
   iciselniky-postgres:
-    container_name: iciselniky_postgres
     image: postgres:13.4-alpine
     env_file:
       - .envs/.production/.iciselniky_postgres
@@ -82,7 +74,6 @@ services:
       - ./_postgres_data_iciselniky:/var/lib/postgresql/data
 
   iciselniky-worker:
-    container_name: iciselniky_worker
     image: conceptica/iciselniky_app:demo
     volumes: *volumes-iciselniky-app
     depends_on:
@@ -93,7 +84,6 @@ services:
     command: scripts/start_worker.sh
 
   iciselniky-beat:
-    container_name: iciselniky_beat
     image: conceptica/iciselniky_app:demo
     volumes: *volumes-iciselniky-app
     depends_on:
@@ -109,7 +99,6 @@ services:
 
   iciselniky-flower:
     image: mher/flower
-    container_name: iciselniky_flower
     env_file:
       -  .envs/.production/.iciselniky_redis
     ports:
@@ -118,11 +107,10 @@ services:
       - iciselniky-redis
 
   frontend-app:
-    container_name: frontend_app
     image: conceptica/ipharm_fe_app:demo
+    command: cp -r ./build /frontend
     volumes:
-      - ./frontend:/usr/src/app/dist
-    command: npm run build
+      - ./frontend:/frontend
 
   nginx:
     container_name: ipharm_nginx
@@ -138,7 +126,6 @@ services:
       - .envs/.production/.nginx
     ports:
       - 80:80
-      - 443:443
     depends_on:
       - ipharm-app
       - iciselniky-app
