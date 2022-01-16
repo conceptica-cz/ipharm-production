@@ -29,7 +29,7 @@ jobs:
           echo "BASE_REFERENCES_URL=${{ secrets.TEST_IPHARM_BASE_REFERENCES_URL }}" >>  .envs/.production/.ipharm_app
           echo "REFERENCES_TOKEN=${{ secrets.TEST_IPHARM_REFERENCES_TOKEN }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
-          echo POSTGRES_HOST=ipharm_postgres >>  .envs/.production/.ipharm_postgres
+          echo POSTGRES_HOST=ipharm-postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_DB=ipharm >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_USER=ipharm >>  .envs/.production/.ipharm_postgres
@@ -50,7 +50,7 @@ jobs:
           echo "DIAGNOSES_URL=${{ secrets.TEST_ICISELNIKY_DIAGNOSES_URL }}" >>  .envs/.production/.iciselniky_app
           echo "MEDICAL_FACILITIES_URL=${{ secrets.TEST_ICISELNIKY_MEDICAL_FACILITIES_URL }}" >>  .envs/.production/.iciselniky_app
           touch .envs/.production/.iciselniky_postgres
-          echo POSTGRES_HOST=iciselniky_postgres >>  .envs/.production/.iciselniky_postgres
+          echo POSTGRES_HOST=iciselniky-postgres >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_DB=iciselniky >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_USER=iciselniky >>  .envs/.production/.iciselniky_postgres
@@ -84,4 +84,4 @@ jobs:
       - name: Deploy
         run: |
           export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i hosts -v deploy_production.yml
+          ansible-playbook -i hosts -v deploy_test.yml
