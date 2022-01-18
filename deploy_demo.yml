@@ -22,6 +22,12 @@
         src: nginx/default.conf
         dest: "{{ project_dir + '/nginx'}}"
 
+    - name: Clean frontend
+      become: yes
+      file:
+        path: "{{ project_dir + '/frontend/build'}}"
+        state: absent
+
     - name: Up
       become: yes
       docker_compose:
