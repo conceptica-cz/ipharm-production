@@ -8,6 +8,11 @@ __pycache__/
 *.log
 
 ipharm_static
-_postgres_data
+ipharm_media
+iciselniky_static
+frontend
+_postgres_data_iciselniky
+_postgres_data_ipharm
+_grafana
 dump.sql
 hosts

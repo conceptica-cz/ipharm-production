@@ -12,15 +12,18 @@
         src: docker-compose.demo.yml
         dest: "{{ project_dir + '/docker-compose.yml' }}"
 
-    - name: Create ngingx directory
+    - name: Create config directory
       file:
         path: "{{ project_dir + '/nginx'}}"
         state: directory
 
-    - name: Copy nginx config
+    - name: Copy config files
       copy:
-        src: nginx/default.conf
-        dest: "{{ project_dir + '/nginx'}}"
+        src: "{{ item }}"
+        dest: "{{ project_dir + '/config/' }}"
+      with_items:
+        - ./config/nginx-config.conf
+        - ./config/promtail-config.yml
 
     - name: Clean frontend
       become: yes
