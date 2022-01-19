@@ -1,4 +1,4 @@
-- hosts: ipharm
+- hosts: ipharm-test
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
   tasks:
@@ -29,16 +29,20 @@
         - ./.envs/.production/.iciselniky_postgres
         - ./.envs/.production/.iciselniky_redis
         - ./.envs/.production/.nginx
+        - ./.envs/.production/.grafana
 
-    - name: Create ngingx directory
+    - name: Create config directory
       file:
-        path: "{{ project_dir + '/nginx'}}"
+        path: "{{ project_dir + '/config'}}"
         state: directory
 
-    - name: Copy nginx config
+    - name: Copy config files
       copy:
-        src: nginx/default.conf
-        dest: "{{ project_dir + '/nginx'}}"
+        src: "{{ item }}"
+        dest: "{{ project_dir + '/config/' }}"
+      with_items:
+        - ./config/nginx-config.conf
+        - ./config/promtail-config.yml
 
     - name: Clean frontend
       become: yes

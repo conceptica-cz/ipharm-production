@@ -1,4 +1,5 @@
-version: "3"
+version: "3.7"
+
 services:
   ipharm-app:
     image: conceptica/ipharm_app:test
@@ -8,8 +9,10 @@ services:
       - .envs/.production/.ipharm_app
       - .envs/.production/.ipharm_postgres
       - .envs/.production/.ipharm_redis
-    ports:
-      - "8000:8000"
+    logging: &logging
+      driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
     command: scripts/start_production.sh
     volumes:
       - ./ipharm_static:/app/static
@@ -22,6 +25,7 @@ services:
       - ipharm-redis
       - ipharm-app
     env_file: *envs-ipharm-app
+    logging: *logging
     command: scripts/start_worker.sh
 
   ipharm-beat:
@@ -31,25 +35,27 @@ services:
       - ipharm-redis
       - ipharm-app
     env_file: *envs-ipharm-app
+    logging: *logging
     command: scripts/start_beat.sh
 
   ipharm-postgres:
     image: postgres:13.4-alpine
     env_file:
       - .envs/.production/.ipharm_postgres
+    logging: *logging
     volumes:
       - ./_postgres_data_ipharm:/var/lib/postgresql/data
 
   ipharm-redis:
     container_name: ipharm_redis
     image: redis:6.2-alpine
+    logging: *logging
 
   ipharm-flower:
     image: mher/flower
     env_file:
-      -  .envs/.production/.ipharm_redis
-    ports:
-      - "5555:5555"
+      - .envs/.production/.ipharm_redis
+    logging: *logging
     depends_on:
       - ipharm-redis
 
@@ -61,14 +67,14 @@ services:
       - .envs/.production/.iciselniky_app
       - .envs/.production/.iciselniky_postgres
       - .envs/.production/.iciselniky_redis
-    ports:
-      - "8001:8000"
+    logging: *logging
     command: scripts/start_production.sh
     volumes: &volumes-iciselniky-app
       - ./iciselniky_static:/app/static
 
   iciselniky-postgres:
     image: postgres:13.4-alpine
+    logging: *logging
     env_file:
       - .envs/.production/.iciselniky_postgres
     volumes:
@@ -82,6 +88,7 @@ services:
       - iciselniky-redis
       - iciselniky-app
     env_file: *envs-iciselniky-app
+    logging: *logging
     command: scripts/start_worker.sh
 
   iciselniky-beat:
@@ -92,23 +99,25 @@ services:
       - iciselniky-redis
       - iciselniky-app
     env_file: *envs-iciselniky-app
+    logging: *logging
     command: scripts/start_beat.sh
 
   iciselniky-redis:
     image: redis:6.2-alpine
+    logging: *logging
 
   iciselniky-flower:
     image: mher/flower
     env_file:
-      -  .envs/.production/.iciselniky_redis
-    ports:
-      - "5556:5555"
+      - .envs/.production/.iciselniky_redis
+    logging: *logging
     depends_on:
       - iciselniky-redis
 
   frontend-app:
     image: conceptica/ipharm_fe_app:test
     command: cp -r ./build /frontend
+    logging: *logging
     volumes:
       - ./frontend:/frontend
 
@@ -116,7 +125,7 @@ services:
     image: nginx
     restart: unless-stopped
     volumes:
-      - ./nginx/default.conf:/etc/nginx/templates/default.conf.template
+      - ./config/nginx-config.conf:/etc/nginx/templates/default.conf.template
       - ./ipharm_static:/ipharm_static
       - ./ipharm_media:/ipharm_media
       - ./iciselniky_static:/iciselniky_static
@@ -125,7 +134,37 @@ services:
       - .envs/.production/.nginx
     ports:
       - 80:80
+      - 3000:3000
+      - 5555:5555
+    logging: *logging
     depends_on:
       - ipharm-app
       - iciselniky-app
       - frontend-app
+
+  promtail:
+    image: grafana/promtail:2.4.2
+    volumes:
+      - ./config/promtail-config.yml:/mnt/config/promtail-config.yml
+      - /var/lib/docker/containers:/host/containers
+    command: -config.file /mnt/config/promtail-config.yml
+    depends_on:
+      - loki
+
+  loki:
+    container_name: loki
+    image: grafana/loki:2.4.2
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_storage:/var/lib/grafana
+    env_file:
+      - .envs/.production/.grafana
+
+volumes:
+  grafana_storage:
+  loki_data:

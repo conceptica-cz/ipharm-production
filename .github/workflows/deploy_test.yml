@@ -63,6 +63,15 @@ jobs:
           echo "IPHARM_DOMAIN=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_DOMAIN=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.nginx
           echo "FRONTEND_DOMAIN=${{ secrets.TEST_FRONTEND_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "GRAFANA_DOMAIN=${{ secrets.TEST_GRAFANA_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "GRAFANA_PORT=${{ secrets.TEST_GRAFANA_PORT }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FLOWER_DOMAIN=${{ secrets.TEST_IPHARM_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FLOWER_PORT=${{ secrets.TEST_FIPHARM_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          echo "ICISELNIKY_FLOWER_DOMAIN=${{ secrets.TEST_ICISELNIKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "ICISELNIKY_FLOWER_PORT=${{ secrets.TEST_ICISELNIKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          touch .envs/.production/.grafana
+          echo "GF_SECURITY_ADMIN_USER=${{ secrets.TEST_GF_SECURITY_ADMIN_USER }}" >>  .envs/.production/.grafana
+          echo "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.TEST__SECURITY_ADMIN_PASSWORD }}" >>  .envs/.production/.grafana
       - name: Create key
         run: |
           mkdir ~/.ssh/
@@ -72,7 +81,7 @@ jobs:
       - name: Create ansible inventory file
         run: |
           touch hosts
-          echo "[ipharm]" >> hosts
+          echo "[ipharm-test]" >> hosts
           echo "${{ secrets.TEST_HOST }} ansible_user=${{ secrets.TEST_USER }} ansible_ssh_private_key_file=~/.ssh/ed25519 project_dir=${{ secrets.TEST_PROJECT_DIRECTORY }}" >> hosts
       - name: Run openvpn
         run: |
