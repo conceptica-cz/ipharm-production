@@ -22,15 +22,24 @@ scrape_configs:
       - regex:
           expression: (?P<image_name>(?:[^|]*[^|])).(?P<container_name>(?:[^|]*[^|])).(?P<image_id>(?:[^|]*[^|])).(?P<container_id>(?:[^|]*[^|]))
           source: tag
+      - regex:
+          expression: levelname\W+(?P<level_name>\w+)
+      - regex:
+          expression: \Wname\W+(?P<logger_name>[\w|\.]+)
+      - regex:
+          expression: funcName\W+(?P<func_name>\w+)
+      - regex:
+          expression: filename\W+(?P<file_name>[\w|\.]+)
       - timestamp:
           format: RFC3339Nano
           source: time
       - labels:
-          tag:
           stream:
           image_name:
           container_name:
-          image_id:
-          container_id:
+          level_name:
+          func_name:
+          logger_name:
+          file_name:
       - output:
           source: output
