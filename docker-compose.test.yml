@@ -3,6 +3,8 @@ version: "3.7"
 services:
   ipharm-app:
     image: conceptica/ipharm_app:test
+    container_name: ipharm-app
+    restart: unless-stopped
     depends_on:
       - ipharm-postgres
     env_file: &envs-ipharm-app
@@ -20,6 +22,8 @@ services:
 
   ipharm-worker:
     image: conceptica/ipharm_app:test
+    container_name: ipharm-worker
+    restart: unless-stopped
     depends_on:
       - ipharm-postgres
       - ipharm-redis
@@ -30,6 +34,8 @@ services:
 
   ipharm-beat:
     image: conceptica/ipharm_app:test
+    container_name: ipharm-beat
+    restart: unless-stopped
     depends_on:
       - ipharm-postgres
       - ipharm-redis
@@ -40,6 +46,8 @@ services:
 
   ipharm-postgres:
     image: postgres:13.4-alpine
+    container_name: ipharm-postgres
+    restart: unless-stopped
     env_file:
       - .envs/.production/.ipharm_postgres
     logging: *logging
@@ -47,12 +55,15 @@ services:
       - ./_postgres_data_ipharm:/var/lib/postgresql/data
 
   ipharm-redis:
-    container_name: ipharm_redis
     image: redis:6.2-alpine
+    container_name: ipharm_redis
+    restart: unless-stopped
     logging: *logging
 
   ipharm-flower:
     image: mher/flower
+    container_name: ipharm-flower
+    restart: unless-stopped
     env_file:
       - .envs/.production/.ipharm_redis
     logging: *logging
@@ -61,6 +72,8 @@ services:
 
   iciselniky-app:
     image: conceptica/iciselniky_app:test
+    container_name: iciselniky-app
+    restart: unless-stopped
     depends_on:
       - iciselniky-postgres
     env_file: &envs-iciselniky-app
@@ -74,6 +87,8 @@ services:
 
   iciselniky-postgres:
     image: postgres:13.4-alpine
+    container_name: iciselniky-postgres
+    restart: unless-stopped
     logging: *logging
     env_file:
       - .envs/.production/.iciselniky_postgres
@@ -82,6 +97,8 @@ services:
 
   iciselniky-worker:
     image: conceptica/iciselniky_app:test
+    container_name: iciselniky-worker
+    restart: unless-stopped
     volumes: *volumes-iciselniky-app
     depends_on:
       - iciselniky-postgres
@@ -93,6 +110,8 @@ services:
 
   iciselniky-beat:
     image: conceptica/iciselniky_app:test
+    container_name: iciselniky-beat
+    restart: unless-stopped
     volumes: *volumes-iciselniky-app
     depends_on:
       - iciselniky-postgres
@@ -104,10 +123,14 @@ services:
 
   iciselniky-redis:
     image: redis:6.2-alpine
+    container_name: iciselniky_redis
+    restart: unless-stopped
     logging: *logging
 
   iciselniky-flower:
     image: mher/flower
+    container_name: iciselniky-flower
+    restart: unless-stopped
     env_file:
       - .envs/.production/.iciselniky_redis
     logging: *logging
@@ -116,6 +139,7 @@ services:
 
   frontend-app:
     image: conceptica/ipharm_fe_app:test
+    container_name: frontend-app
     command: cp -r ./build /frontend
     logging: *logging
     volumes:
@@ -123,6 +147,7 @@ services:
 
   nginx:
     image: nginx
+    container_name: nginx
     restart: unless-stopped
     volumes:
       - ./config/nginx-config.conf:/etc/nginx/templates/default.conf.template
@@ -144,6 +169,8 @@ services:
 
   promtail:
     image: grafana/promtail:2.4.2
+    container_name: promtail
+    restart: unless-stopped
     volumes:
       - ./config/promtail-config.yml:/mnt/config/promtail-config.yml
       - /var/lib/docker/containers:/host/containers
@@ -152,14 +179,17 @@ services:
       - loki
 
   loki:
-    container_name: loki
     image: grafana/loki:2.4.2
+    container_name: loki
+    restart: unless-stopped
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
 
   grafana:
     image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
     volumes:
       - grafana_storage:/var/lib/grafana
     env_file:
