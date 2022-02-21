@@ -31,6 +31,8 @@ services:
     env_file: *envs-ipharm-app
     logging: *logging
     command: scripts/start_worker.sh
+    volumes:
+      - ./ipharm_media:/app/media
 
   ipharm-beat:
     image: conceptica/ipharm_app:test
