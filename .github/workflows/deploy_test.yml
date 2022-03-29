@@ -8,6 +8,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Update apt
+        uses: sudo apt-get update
       - name: Install ansible
         run: sudo apt-get install ansible
       - name: Install openvpn
