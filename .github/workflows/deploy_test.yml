@@ -62,16 +62,40 @@ jobs:
           echo REDIS_HOST=iciselniky-redis >>  .envs/.production/.iciselniky_redis
           echo REDIS_PORT=6379 >>  .envs/.production/.iciselniky_redis
           echo CELERY_BROKER_URL=redis://iciselniky-redis:6379/1 >>  .envs/.production/.iciselniky_redis
+          touch .envs/.production/.izadanky_app
+          echo "SECRET_KEY=${{ secrets.TEST_IZADANKY_SECRET_KEY }}" >>  .envs/.production/.izadanky_app
+          echo "ALLOWED_HOSTS=${{ secrets.TEST_IZADANKY_DOMAIN }}" >>  .envs/.production/.izadanky_app
+          echo "SENTRY_DSN=${{ secrets.TEST_IZADANKY_SENTRY_DSN }}" >>  .envs/.production/.izadanky_app
+          echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.izadanky_app
+          echo LOG_LEVEL=DEBUG >>  .envs/.production/.izadanky_app
+          echo "BASE_IPHARM_URL=${{ secrets.TEST_IZADANKY_BASE_IPHARM_URL }}" >>  .envs/.production/.izadanky_app
+          echo "IPHARM_TOKEN=${{ secrets.TEST_IZADANKY_IPHARM_TOKEN }}" >>  .envs/.production/.izadanky_app
+          echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_IZADANKY_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.izadanky_app
+          echo "ICISELNIKY_TOKEN=${{ secrets.TEST_IZADANKY_ICISELNIKY_TOKEN }}" >>  .envs/.production/.izadanky_app
+          touch .envs/.production/.izadanky_postgres
+          echo POSTGRES_HOST=izadanky-postgres >>  .envs/.production/.izadanky_postgres
+          echo POSTGRES_PORT=5432 >>  .envs/.production/.izadanky_postgres
+          echo POSTGRES_DB=izadanky >>  .envs/.production/.izadanky_postgres
+          echo POSTGRES_USER=izadanky >>  .envs/.production/.izadanky_postgres
+          echo "POSTGRES_PASSWORD=${{ secrets.TEST_IZADANKY_POSTGRES_PASSWORD }}" >>  .envs/.production/.izadanky_postgres
+          touch .envs/.production/.izadanky_redis
+          echo REDIS_HOST=izadanky-redis >>  .envs/.production/.izadanky_redis
+          echo REDIS_PORT=6379 >>  .envs/.production/.izadanky_redis
+          echo CELERY_BROKER_URL=redis://izadanky-redis:6379/1 >>  .envs/.production/.izadanky_redis
           touch .envs/.production/.nginx
           echo "IPHARM_DOMAIN=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_DOMAIN=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.nginx
-          echo "FRONTEND_DOMAIN=${{ secrets.TEST_FRONTEND_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FRONTEND_DOMAIN=${{ secrets.TEST_IPHARM_FRONTEND_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_DOMAIN=${{ secrets.TEST_IZADANKY_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_FRONTEND_DOMAIN=${{ secrets.TEST_IZADANKY_FRONTEND_DOMAIN }}" >>  .envs/.production/.nginx
           echo "GRAFANA_DOMAIN=${{ secrets.TEST_GRAFANA_DOMAIN }}" >>  .envs/.production/.nginx
           echo "GRAFANA_PORT=${{ secrets.TEST_GRAFANA_PORT }}" >>  .envs/.production/.nginx
           echo "IPHARM_FLOWER_DOMAIN=${{ secrets.TEST_IPHARM_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
           echo "IPHARM_FLOWER_PORT=${{ secrets.TEST_FIPHARM_FLOWER_PORT }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_FLOWER_DOMAIN=${{ secrets.TEST_ICISELNIKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_FLOWER_PORT=${{ secrets.TEST_ICISELNIKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_FLOWER_DOMAIN=${{ secrets.TEST_IZADANKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_FLOWER_PORT=${{ secrets.TEST_IZADANKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
           touch .envs/.production/.grafana
           echo "GF_SECURITY_ADMIN_USER=${{ secrets.TEST_GF_SECURITY_ADMIN_USER }}" >>  .envs/.production/.grafana
           echo "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.TEST__SECURITY_ADMIN_PASSWORD }}" >>  .envs/.production/.grafana

@@ -10,9 +10,12 @@ __pycache__/
 ipharm_static
 ipharm_media
 iciselniky_static
-frontend
+izadanky_static
+frontend_ipharm
+frontend_izadanky
 _postgres_data_iciselniky
 _postgres_data_ipharm
+_postgres_data_izadanky
 _grafana
 dump.sql
 hosts
