@@ -1,8 +1,0 @@
-.idea
-.envs
-.gitignore
-.github
-.git
-dump.sql
-dockerfiles
-_postgres_data

@@ -28,6 +28,9 @@
         - ./.envs/.production/.iciselniky_app
         - ./.envs/.production/.iciselniky_postgres
         - ./.envs/.production/.iciselniky_redis
+        - ./.envs/.production/.izadanky_app
+        - ./.envs/.production/.izadanky_postgres
+        - ./.envs/.production/.izadanky_redis
         - ./.envs/.production/.nginx
         - ./.envs/.production/.grafana
 
@@ -47,7 +50,7 @@
     - name: Clean frontend
       become: yes
       file:
-        path: "{{ project_dir + '/frontend/build'}}"
+        path: "{{ project_dir + '/frontend_ipharm/build'}}"
         state: absent
 
     - name: Up
