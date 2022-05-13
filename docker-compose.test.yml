@@ -172,9 +172,9 @@ services:
     volumes:
       - ./_postgres_data_izadanky:/var/lib/postgresql/data
 
-  izadanky-worker:
+  izadanky-worker-high-priority:
     image: conceptica/izadanky_app:test
-    container_name: izadanky-worker
+    container_name: izadanky-worker-high-priority
     restart: unless-stopped
     volumes: *volumes-izadanky-app
     depends_on:
@@ -183,7 +183,20 @@ services:
       - izadanky-app
     env_file: *envs-izadanky-app
     logging: *logging
-    command: scripts/start_worker.sh
+    command: scripts/start_worker.sh -Q high_priority -n high_priority
+
+  izadanky-worker-low-priority:
+    image: conceptica/izadanky_app:test
+    container_name: izadanky-worker-low-priority
+    restart: unless-stopped
+    volumes: *volumes-izadanky-app
+    depends_on:
+      - izadanky-postgres
+      - izadanky-redis
+      - izadanky-app
+    env_file: *envs-izadanky-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q low_priority -n low_priority
 
   izadanky-beat:
     image: conceptica/izadanky_app:test
