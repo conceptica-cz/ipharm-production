@@ -27,8 +27,8 @@ jobs:
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo LOG_LEVEL=DEBUG >>  .envs/.production/.ipharm_app
-          echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.ipharm_app
-          echo "ICISELNIKY_TOKEN=${{ secrets.TEST_ICISELNIKY_TOKEN }}" >>  .envs/.production/.ipharm_app
+          echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_IPHARM_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.ipharm_app
+          echo "ICISELNIKY_TOKEN=${{ secrets.TEST_IPHARM_ICISELNIKY_TOKEN }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm-postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
@@ -46,10 +46,6 @@ jobs:
           echo "SENTRY_DSN=${{ secrets.TEST_ICISELNIKY_SENTRY_DSN }}" >>  .envs/.production/.iciselniky_app
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.iciselniky_app
           echo LOG_LEVEL=DEBUG >>  .envs/.production/.iciselniky_app
-          echo "REFERENCES_TOKEN=${{ secrets.TEST_ICISELNIKY_REFERENCES_TOKEN }}" >>  .envs/.production/.iciselniky_app
-          echo "BASE_REFERENCES_URL=${{ secrets.TEST_ICISELNIKY_BASE_REFERENCES_URL }}" >>  .envs/.production/.iciselniky_app
-          echo "DIAGNOSES_URL=${{ secrets.TEST_ICISELNIKY_DIAGNOSES_URL }}" >>  .envs/.production/.iciselniky_app
-          echo "MEDICAL_FACILITIES_URL=${{ secrets.TEST_ICISELNIKY_MEDICAL_FACILITIES_URL }}" >>  .envs/.production/.iciselniky_app
           touch .envs/.production/.iciselniky_postgres
           echo POSTGRES_HOST=iciselniky-postgres >>  .envs/.production/.iciselniky_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.iciselniky_postgres
@@ -89,14 +85,14 @@ jobs:
           echo "GRAFANA_DOMAIN=${{ secrets.TEST_GRAFANA_DOMAIN }}" >>  .envs/.production/.nginx
           echo "GRAFANA_PORT=${{ secrets.TEST_GRAFANA_PORT }}" >>  .envs/.production/.nginx
           echo "IPHARM_FLOWER_DOMAIN=${{ secrets.TEST_IPHARM_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
-          echo "IPHARM_FLOWER_PORT=${{ secrets.TEST_FIPHARM_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FLOWER_PORT=${{ secrets.TEST_IPHARM_FLOWER_PORT }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_FLOWER_DOMAIN=${{ secrets.TEST_ICISELNIKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
           echo "ICISELNIKY_FLOWER_PORT=${{ secrets.TEST_ICISELNIKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
           echo "IZADANKY_FLOWER_DOMAIN=${{ secrets.TEST_IZADANKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
           echo "IZADANKY_FLOWER_PORT=${{ secrets.TEST_IZADANKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
           touch .envs/.production/.grafana
           echo "GF_SECURITY_ADMIN_USER=${{ secrets.TEST_GF_SECURITY_ADMIN_USER }}" >>  .envs/.production/.grafana
-          echo "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.TEST__SECURITY_ADMIN_PASSWORD }}" >>  .envs/.production/.grafana
+          echo "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.TEST_GF_SECURITY_ADMIN_PASSWORD }}" >>  .envs/.production/.grafana
       - name: Create key
         run: |
           mkdir ~/.ssh/
