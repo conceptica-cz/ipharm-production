@@ -20,9 +20,9 @@ services:
       - ./ipharm_static:/app/static
       - ./ipharm_media:/app/media
 
-  ipharm-worker:
+  ipharm-worker-high-priority:
     image: conceptica/ipharm_app:test
-    container_name: ipharm-worker
+    container_name: ipharm-worker-high-priority
     restart: unless-stopped
     depends_on:
       - ipharm-postgres
@@ -30,7 +30,35 @@ services:
       - ipharm-app
     env_file: *envs-ipharm-app
     logging: *logging
-    command: scripts/start_worker.sh
+    command: scripts/start_worker.sh -Q high_priority -n high_priority
+    volumes:
+      - ./ipharm_media:/app/media
+
+  ipharm-worker-medium-priority:
+    image: conceptica/ipharm_app:test
+    container_name: ipharm-worker-medium-priority
+    restart: unless-stopped
+    depends_on:
+      - ipharm-postgres
+      - ipharm-redis
+      - ipharm-app
+    env_file: *envs-ipharm-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q medium_priority -n medium_priority
+    volumes:
+      - ./ipharm_media:/app/media
+
+  ipharm-worker-low-priority:
+    image: conceptica/ipharm_app:test
+    container_name: ipharm-worker-low-priority
+    restart: unless-stopped
+    depends_on:
+      - ipharm-postgres
+      - ipharm-redis
+      - ipharm-app
+    env_file: *envs-ipharm-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q low_priority -n low_priority
     volumes:
       - ./ipharm_media:/app/media
 
