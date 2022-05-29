@@ -97,9 +97,9 @@ services:
     volumes:
       - ./_postgres_data_iciselniky:/var/lib/postgresql/data
 
-  iciselniky-worker:
+  iciselniky-worker-high-priority:
     image: conceptica/iciselniky_app:test
-    container_name: iciselniky-worker
+    container_name: iciselniky-worker-high-priority
     restart: unless-stopped
     volumes: *volumes-iciselniky-app
     depends_on:
@@ -108,7 +108,21 @@ services:
       - iciselniky-app
     env_file: *envs-iciselniky-app
     logging: *logging
-    command: scripts/start_worker.sh
+    command: scripts/start_worker.sh -Q high_priority -n high_priority
+
+  iciselniky-worker-low-priority:
+    image: conceptica/iciselniky_app:test
+    container_name: iciselniky-worker-low-priority
+    restart: unless-stopped
+    volumes: *volumes-iciselniky-app
+    depends_on:
+      - iciselniky-postgres
+      - iciselniky-redis
+      - iciselniky-app
+    env_file: *envs-iciselniky-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q low_priority -n low_priority
+
 
   iciselniky-beat:
     image: conceptica/iciselniky_app:test
