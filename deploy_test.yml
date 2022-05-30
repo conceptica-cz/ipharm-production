@@ -58,5 +58,7 @@
       docker_compose:
         project_src: "{{ project_dir }}"
         state: present
+        recreate: always
+        remove_orphans: yes
         pull: yes
 
