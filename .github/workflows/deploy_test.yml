@@ -27,6 +27,8 @@ jobs:
           echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo ENVIRONMENT=test >>  .envs/.production/.ipharm_app
           echo LOG_LEVEL=DEBUG >>  .envs/.production/.ipharm_app
+          echo "BASE_IZADANKY_URL=${{ secrets.TEST_IPHARM_BASE_IZADANKY_URL }}" >>  .envs/.production/.ipharm_app
+          echo "IZADANKY_TOKEN=${{ secrets.TEST_IPHARM_IZADANKY_TOKEN }}" >>  .envs/.production/.ipharm_app
           echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_IPHARM_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.ipharm_app
           echo "ICISELNIKY_TOKEN=${{ secrets.TEST_IPHARM_ICISELNIKY_TOKEN }}" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
