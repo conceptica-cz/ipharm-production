@@ -1,0 +1,43 @@
+- name: Create project directory
+  become: yes
+  file:
+    path: "{{ project_dir }}"
+    state: directory
+
+- name: Copy envs (force_evs={{ force_envs }})
+  become: yes
+  copy:
+    src: "{{ item }}"
+    dest: "{{ project_dir + '/.envs/.production/' }}"
+    mode: 0660
+    force: "{{ force_envs }}"
+  with_items:
+        - ./.envs/.production/.grafana
+
+- name: Create config directory
+  become: yes
+  file:
+    path: "{{ project_dir + '/config'}}"
+    state: directory
+
+- name: Copy config
+  become: yes
+  template:
+    src: promtail-config.yml
+    dest: "{{ project_dir + '/config/promtail-config.yml' }}"
+
+- name: Copy docker-compose
+  become: yes
+  template:
+    src: docker-compose.yml
+    dest: "{{ project_dir + '/docker-compose.yml' }}"
+
+- name: docker-compose down/up
+  become: yes
+  docker_compose:
+    project_src: "{{ project_dir }}"
+    state: present
+    recreate: always
+    remove_orphans: yes
+    pull: yes
+

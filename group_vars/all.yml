@@ -1,0 +1,8 @@
+ansible_python_interpreter: "/usr/bin/python3"
+project_base_dir: "/opt"
+docker_data_dir: "/var/lib/docker/containers"
+force_envs: no
+modules:
+  - ipharm
+  - iciselniky
+  - izadanky
