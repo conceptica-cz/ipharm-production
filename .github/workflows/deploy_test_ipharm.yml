@@ -1,0 +1,66 @@
+name: Deploy test ipharm
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install ansible
+        run: sudo apt-get install ansible
+      - name: Install openvpn
+        run: sudo apt-get install openvpn -y
+      - name: Create openvpn config
+        run: echo "${{ secrets.VPN_CONFIG }}" >>  vpnconfig.ovpn
+      - name:  Create env files
+        run: |
+          mkdir -p .envs/.production
+          touch .envs/.production/.ipharm_app
+          echo "SECRET_KEY=${{ secrets.TEST_IPHARM_SECRET_KEY }}" >>  .envs/.production/.ipharm_app
+          echo "ALLOWED_HOSTS=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.ipharm_app
+          echo "SENTRY_DSN=${{ secrets.TEST_IPHARM_SENTRY_DSN }}" >>  .envs/.production/.ipharm_app
+          echo "CORS_ALLOWED_ORIGINS=${{ secrets.TEST_IPHARM_CORS_ALLOWED_ORIGINS }}" >>  .envs/.production/.ipharm_app
+          echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.ipharm_app
+          echo ENVIRONMENT=test >>  .envs/.production/.ipharm_app
+          echo LOG_LEVEL=DEBUG >>  .envs/.production/.ipharm_app
+          echo "BASE_IZADANKY_URL=${{ secrets.TEST_IPHARM_BASE_IZADANKY_URL }}" >>  .envs/.production/.ipharm_app
+          echo "IZADANKY_TOKEN=${{ secrets.TEST_IPHARM_IZADANKY_TOKEN }}" >>  .envs/.production/.ipharm_app
+          echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_IPHARM_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.ipharm_app
+          echo "ICISELNIKY_TOKEN=${{ secrets.TEST_IPHARM_ICISELNIKY_TOKEN }}" >>  .envs/.production/.ipharm_app
+          touch .envs/.production/.ipharm_postgres
+          echo POSTGRES_HOST=ipharm-postgres >>  .envs/.production/.ipharm_postgres
+          echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
+          echo POSTGRES_DB=ipharm >>  .envs/.production/.ipharm_postgres
+          echo POSTGRES_USER=ipharm >>  .envs/.production/.ipharm_postgres
+          echo "POSTGRES_PASSWORD=${{ secrets.TEST_IPHARM_POSTGRES_PASSWORD }}" >>  .envs/.production/.ipharm_postgres
+          touch .envs/.production/.ipharm_redis
+          echo REDIS_HOST=ipharm-redis >>  .envs/.production/.ipharm_redis
+          echo REDIS_PORT=6379 >>  .envs/.production/.ipharm_redis
+          echo CELERY_BROKER_URL=redis://ipharm-redis:6379/1 >>  .envs/.production/.ipharm_redis
+          echo "FLOWER_BASIC_AUTH=${{ secrets.TEST_IPHARM_FLOWER_AUTH }}" >>  .envs/.production/.ipharm_redis
+      - name: Create key
+        run: |
+          mkdir ~/.ssh/
+          touch ~/.ssh/ed25519
+          chmod 600 ~/.ssh/ed25519
+          echo "${{ secrets.TEST_PRIVATE_KEY }}" >>  ~/.ssh/ed25519
+      - name: Create ansible inventory file
+        run: |
+          touch hosts
+          echo "[test_ipharm]" >> hosts
+          echo "${{ secrets.TEST_HOST }} ansible_user=${{ secrets.TEST_USER }} ansible_ssh_private_key_file=~/.ssh/ed25519 project_base_dir=${{ secrets.TEST_PROJECT_DIRECTORY }}" >> hosts
+      - name: Run openvpn
+        run: |
+          sudo openvpn --config vpnconfig.ovpn --daemon
+      - name: Wait openvpn connection
+        timeout-minutes: 1
+        run: until ping -c1 ${{ secrets.TEST_HOST }}; do sleep 2; done
+
+      - name: Deploy
+        run: |
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i hosts -v deploy_test_ipharm.yml

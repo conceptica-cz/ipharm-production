@@ -1,29 +1,11 @@
+{% if "ipharm" in modules  %}
+
 upstream ipharm_app {
     server ipharm-app:8000;
 }
 
-upstream iciselniky_app {
-    server iciselniky-app:8000;
-}
-
-upstream izadanky_app {
-    server izadanky-app:8000;
-}
-
-upstream grafana {
-    server grafana:3000;
-}
-
 upstream ipharm_flower {
     server ipharm-flower:5555;
-}
-
-upstream iciselniky_flower {
-    server iciselniky-flower:5555;
-}
-
-upstream izadanky_flower {
-    server izadanky-flower:5555;
 }
 
 server {
@@ -58,6 +40,29 @@ server {
 }
 
 server {
+    listen ${IPHARM_FLOWER_PORT};
+    server_name ${IPHARM_FLOWER_DOMAIN};
+
+    location / {
+        proxy_pass http://ipharm_flower/;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+    }
+}
+
+{% endif %}
+
+{% if "iciselniky" in modules  %}
+
+upstream iciselniky_app {
+    server iciselniky-app:8000;
+}
+
+upstream iciselniky_flower {
+    server iciselniky-flower:5555;
+}
+
+server {
     listen 80;
     server_name ${ICISELNIKY_DOMAIN};
 
@@ -70,6 +75,30 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
     }
+}
+
+server {
+    listen ${ICISELNIKY_FLOWER_PORT};
+    server_name ${ICISELNIKY_FLOWER_DOMAIN};
+
+    location / {
+        proxy_pass http://iciselniky_flower/;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+    }
+}
+
+{% endif %}
+
+
+{% if "izadanky" in modules  %}
+
+upstream izadanky_app {
+    server izadanky-app:8000;
+}
+
+upstream izadanky_flower {
+    server izadanky-flower:5555;
 }
 
 # server {
@@ -98,45 +127,18 @@ server {
     }
 }
 
+{% endif %}
+
+upstream grafana {
+    server grafana:3000;
+}
+
 server {
     listen ${GRAFANA_PORT};
     server_name ${GRAFANA_DOMAIN};
 
     location / {
         proxy_pass http://grafana/;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
-    }
-}
-
-server {
-    listen ${IPHARM_FLOWER_PORT};
-    server_name ${IPHARM_FLOWER_DOMAIN};
-
-    location / {
-        proxy_pass http://ipharm_flower/;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
-    }
-}
-
-server {
-    listen ${ICISELNIKY_FLOWER_PORT};
-    server_name ${ICISELNIKY_FLOWER_DOMAIN};
-
-    location / {
-        proxy_pass http://iciselniky_flower/;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
-    }
-}
-
-server {
-    listen ${IZADANKY_FLOWER_PORT};
-    server_name ${IZADANKY_FLOWER_DOMAIN};
-
-    location / {
-        proxy_pass http://izadanky_flower/;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
     }

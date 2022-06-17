@@ -1,0 +1,95 @@
+version: "3.7"
+
+services:
+  iciselniky-app:
+    image: conceptica/iciselniky_app:{{docker_tag}}
+    container_name: iciselniky-app
+    restart: unless-stopped
+    depends_on:
+      - iciselniky-postgres
+    env_file: &envs-iciselniky-app
+      - .envs/.production/.iciselniky_app
+      - .envs/.production/.iciselniky_postgres
+      - .envs/.production/.iciselniky_redis
+    logging: &logging
+      driver: "json-file"
+      options:
+        tag: {{ '"{{.ImageName}}|{{.Name}}"' }}
+    command: scripts/start_production.sh
+    volumes: &volumes-iciselniky-app
+      - ./iciselniky_static:/app/static
+    networks:
+      - external
+      - default
+
+  iciselniky-postgres:
+    image: postgres:13.4-alpine
+    container_name: iciselniky-postgres
+    restart: unless-stopped
+    logging: *logging
+    env_file:
+      - .envs/.production/.iciselniky_postgres
+    volumes:
+      - ./_postgres_data_iciselniky:/var/lib/postgresql/data
+
+  iciselniky-worker-high-priority:
+    image: conceptica/iciselniky_app:{{docker_tag}}
+    container_name: iciselniky-worker-high-priority
+    restart: unless-stopped
+    volumes: *volumes-iciselniky-app
+    depends_on:
+      - iciselniky-postgres
+      - iciselniky-redis
+      - iciselniky-app
+    env_file: *envs-iciselniky-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q high_priority -n high_priority
+
+  iciselniky-worker-low-priority:
+    image: conceptica/iciselniky_app:{{docker_tag}}
+    container_name: iciselniky-worker-low-priority
+    restart: unless-stopped
+    volumes: *volumes-iciselniky-app
+    depends_on:
+      - iciselniky-postgres
+      - iciselniky-redis
+      - iciselniky-app
+    env_file: *envs-iciselniky-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q low_priority -n low_priority
+
+  iciselniky-beat:
+    image: conceptica/iciselniky_app:{{docker_tag}}
+    container_name: iciselniky-beat
+    restart: unless-stopped
+    volumes: *volumes-iciselniky-app
+    depends_on:
+      - iciselniky-postgres
+      - iciselniky-redis
+      - iciselniky-app
+    env_file: *envs-iciselniky-app
+    logging: *logging
+    command: scripts/start_beat.sh
+
+  iciselniky-redis:
+    image: redis:6.2-alpine
+    container_name: iciselniky-redis
+    restart: unless-stopped
+    logging: *logging
+
+  iciselniky-flower:
+    image: mher/flower
+    container_name: iciselniky-flower
+    restart: unless-stopped
+    env_file:
+      - .envs/.production/.iciselniky_redis
+    logging: *logging
+    depends_on:
+      - iciselniky-redis
+    networks:
+      - external
+      - default
+
+networks:
+  external:
+    name: ipharm-network

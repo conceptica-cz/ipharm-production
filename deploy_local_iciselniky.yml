@@ -1,0 +1,3 @@
+- hosts: local_iciselniky
+  roles:
+    - iciselniky

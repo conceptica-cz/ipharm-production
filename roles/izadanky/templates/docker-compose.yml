@@ -1,0 +1,103 @@
+version: "3.7"
+
+services:
+  izadanky-app:
+    image: conceptica/izadanky_app:{{docker_tag}}
+    container_name: izadanky-app
+    restart: unless-stopped
+    depends_on:
+      - izadanky-postgres
+    env_file: &envs-izadanky-app
+      - .envs/.production/.izadanky_app
+      - .envs/.production/.izadanky_postgres
+      - .envs/.production/.izadanky_redis
+    logging: &logging
+      driver: "json-file"
+      options:
+        tag: {{ '"{{.ImageName}}|{{.Name}}"' }}
+    command: scripts/start_production.sh
+    volumes: &volumes-izadanky-app
+      - ./izadanky_static:/app/static
+    networks:
+      - external
+      - default
+
+  izadanky-postgres:
+    image: postgres:13.4-alpine
+    container_name: izadanky-postgres
+    restart: unless-stopped
+    logging: *logging
+    env_file:
+      - .envs/.production/.izadanky_postgres
+    volumes:
+      - ./_postgres_data_izadanky:/var/lib/postgresql/data
+
+  izadanky-worker-high-priority:
+    image: conceptica/izadanky_app:{{docker_tag}}
+    container_name: izadanky-worker-high-priority
+    restart: unless-stopped
+    volumes: *volumes-izadanky-app
+    depends_on:
+      - izadanky-postgres
+      - izadanky-redis
+      - izadanky-app
+    env_file: *envs-izadanky-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q high_priority -n high_priority
+
+  izadanky-worker-low-priority:
+    image: conceptica/izadanky_app:{{docker_tag}}
+    container_name: izadanky-worker-low-priority
+    restart: unless-stopped
+    volumes: *volumes-izadanky-app
+    depends_on:
+      - izadanky-postgres
+      - izadanky-redis
+      - izadanky-app
+    env_file: *envs-izadanky-app
+    logging: *logging
+    command: scripts/start_worker.sh -Q low_priority -n low_priority
+
+  izadanky-beat:
+    image: conceptica/izadanky_app:{{docker_tag}}
+    container_name: izadanky-beat
+    restart: unless-stopped
+    volumes: *volumes-izadanky-app
+    depends_on:
+      - izadanky-postgres
+      - izadanky-redis
+      - izadanky-app
+    env_file: *envs-izadanky-app
+    logging: *logging
+    command: scripts/start_beat.sh
+
+  izadanky-redis:
+    image: redis:6.2-alpine
+    container_name: izadanky-redis
+    restart: unless-stopped
+    logging: *logging
+
+  izadanky-flower:
+    image: mher/flower
+    container_name: izadanky-flower
+    restart: unless-stopped
+    env_file:
+      - .envs/.production/.izadanky_redis
+    logging: *logging
+    depends_on:
+      - izadanky-redis
+    networks:
+      - external
+      - default
+
+#  izadanky-frontend-app:
+#    image: conceptica/izadanky_fe_app:{{docker_tag}}
+#    container_name: izadanky-frontend-app
+#    command: cp -r ./build /frontend
+#    logging: *logging
+#    volumes:
+#      - ./frontend_izadanky:/frontend_izadanky
+
+networks:
+  external:
+    name: ipharm-network
