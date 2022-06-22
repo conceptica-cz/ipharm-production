@@ -51,8 +51,12 @@ jobs:
       - name: Create ansible inventory file
         run: |
           touch hosts
-          echo "[test_ipharm]" >> hosts
+          echo "[test]" >> hosts
           echo "${{ secrets.TEST_HOST }} ansible_user=${{ secrets.TEST_USER }} ansible_ssh_private_key_file=~/.ssh/ed25519 project_base_dir=${{ secrets.TEST_PROJECT_DIRECTORY }}" >> hosts
+
+          echo "[test_ipharm]" >> hosts
+          echo "${{ secrets.TEST_HOST }}" >> hosts
+          cat hosts
       - name: Run openvpn
         run: |
           sudo openvpn --config vpnconfig.ovpn --daemon

@@ -1,0 +1,61 @@
+name: Deploy test ipharm
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install ansible
+        run: sudo apt-get install ansible
+      - name: Install openvpn
+        run: sudo apt-get install openvpn -y
+      - name: Create openvpn config
+        run: echo "${{ secrets.VPN_CONFIG }}" >>  vpnconfig.ovpn
+      - name:  Create env files
+        run: |
+          touch .envs/.production/.nginx
+          echo "IPHARM_DOMAIN=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "ICISELNIKY_DOMAIN=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FRONTEND_DOMAIN=${{ secrets.TEST_IPHARM_FRONTEND_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_DOMAIN=${{ secrets.TEST_IZADANKY_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_FRONTEND_DOMAIN=${{ secrets.TEST_IZADANKY_FRONTEND_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "GRAFANA_DOMAIN=${{ secrets.TEST_GRAFANA_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "GRAFANA_PORT=${{ secrets.TEST_GRAFANA_PORT }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FLOWER_DOMAIN=${{ secrets.TEST_IPHARM_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IPHARM_FLOWER_PORT=${{ secrets.TEST_IPHARM_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          echo "ICISELNIKY_FLOWER_DOMAIN=${{ secrets.TEST_ICISELNIKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "ICISELNIKY_FLOWER_PORT=${{ secrets.TEST_ICISELNIKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_FLOWER_DOMAIN=${{ secrets.TEST_IZADANKY_FLOWER_DOMAIN }}" >>  .envs/.production/.nginx
+          echo "IZADANKY_FLOWER_PORT=${{ secrets.TEST_IZADANKY_FLOWER_PORT }}" >>  .envs/.production/.nginx
+          touch .envs/.production/.grafana
+      - name: Create key
+        run: |
+          mkdir ~/.ssh/
+          touch ~/.ssh/ed25519
+          chmod 600 ~/.ssh/ed25519
+          echo "${{ secrets.TEST_PRIVATE_KEY }}" >>  ~/.ssh/ed25519
+      - name: Create ansible inventory file
+        run: |
+          touch hosts
+          echo "[test]" >> hosts
+          echo "${{ secrets.TEST_HOST }} ansible_user=${{ secrets.TEST_USER }} ansible_ssh_private_key_file=~/.ssh/ed25519 project_base_dir=${{ secrets.TEST_PROJECT_DIRECTORY }}" >> hosts
+
+          echo "[test_nginx]" >> hosts
+          echo "${{ secrets.TEST_HOST }}" >> hosts
+          cat hosts
+      - name: Run openvpn
+        run: |
+          sudo openvpn --config vpnconfig.ovpn --daemon
+      - name: Wait openvpn connection
+        timeout-minutes: 1
+        run: until ping -c1 ${{ secrets.TEST_HOST }}; do sleep 2; done
+
+      - name: Deploy
+        run: |
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i hosts -v deploy_test_nginx.yml
