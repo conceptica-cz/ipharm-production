@@ -1,4 +1,4 @@
-name: Deploy test ipharm
+name: Deploy test izadanky
 
 on: workflow_dispatch
 
