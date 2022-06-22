@@ -1,0 +1,67 @@
+name: Deploy test ipharm
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install ansible
+        run: sudo apt-get install ansible
+      - name: Install openvpn
+        run: sudo apt-get install openvpn -y
+      - name: Create openvpn config
+        run: echo "${{ secrets.VPN_CONFIG }}" >>  vpnconfig.ovpn
+      - name:  Create env files
+        run: |
+          mkdir -p .envs/.production
+          touch .envs/.production/.izadanky_app
+          echo "SECRET_KEY=${{ secrets.TEST_IZADANKY_SECRET_KEY }}" >>  .envs/.production/.izadanky_app
+          echo "ALLOWED_HOSTS=${{ secrets.TEST_IZADANKY_DOMAIN }}" >>  .envs/.production/.izadanky_app
+          echo "SENTRY_DSN=${{ secrets.TEST_IZADANKY_SENTRY_DSN }}" >>  .envs/.production/.izadanky_app
+          echo SENTRY_ENVIRONMENT=test >>  .envs/.production/.izadanky_app
+          echo LOG_LEVEL=DEBUG >>  .envs/.production/.izadanky_app
+          echo "BASE_IPHARM_URL=${{ secrets.TEST_IZADANKY_BASE_IPHARM_URL }}" >>  .envs/.production/.izadanky_app
+          echo "IPHARM_TOKEN=${{ secrets.TEST_IZADANKY_IPHARM_TOKEN }}" >>  .envs/.production/.izadanky_app
+          echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_IZADANKY_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.izadanky_app
+          echo "ICISELNIKY_TOKEN=${{ secrets.TEST_IZADANKY_ICISELNIKY_TOKEN }}" >>  .envs/.production/.izadanky_app
+          touch .envs/.production/.izadanky_postgres
+          echo POSTGRES_HOST=izadanky-postgres >>  .envs/.production/.izadanky_postgres
+          echo POSTGRES_PORT=5432 >>  .envs/.production/.izadanky_postgres
+          echo POSTGRES_DB=izadanky >>  .envs/.production/.izadanky_postgres
+          echo POSTGRES_USER=izadanky >>  .envs/.production/.izadanky_postgres
+          echo "POSTGRES_PASSWORD=${{ secrets.TEST_IZADANKY_POSTGRES_PASSWORD }}" >>  .envs/.production/.izadanky_postgres
+          touch .envs/.production/.izadanky_redis
+          echo REDIS_HOST=izadanky-redis >>  .envs/.production/.izadanky_redis
+          echo REDIS_PORT=6379 >>  .envs/.production/.izadanky_redis
+          echo CELERY_BROKER_URL=redis://izadanky-redis:6379/1 >>  .envs/.production/.izadanky_redis
+      - name: Create key
+        run: |
+          mkdir ~/.ssh/
+          touch ~/.ssh/ed25519
+          chmod 600 ~/.ssh/ed25519
+          echo "${{ secrets.TEST_PRIVATE_KEY }}" >>  ~/.ssh/ed25519
+      - name: Create ansible inventory file
+        run: |
+          touch hosts
+          echo "[test]" >> hosts
+          echo "${{ secrets.TEST_HOST }} ansible_user=${{ secrets.TEST_USER }} ansible_ssh_private_key_file=~/.ssh/ed25519 project_base_dir=${{ secrets.TEST_PROJECT_DIRECTORY }}" >> hosts
+
+          echo "[test_izadanky]" >> hosts
+          echo "${{ secrets.TEST_HOST }}" >> hosts
+          cat hosts
+      - name: Run openvpn
+        run: |
+          sudo openvpn --config vpnconfig.ovpn --daemon
+      - name: Wait openvpn connection
+        timeout-minutes: 1
+        run: until ping -c1 ${{ secrets.TEST_HOST }}; do sleep 2; done
+
+      - name: Deploy
+        run: |
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i hosts -v deploy_test_izadanky.yml
