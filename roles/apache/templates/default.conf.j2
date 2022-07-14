@@ -1,0 +1,199 @@
+{% if "ipharm" in modules  %}
+
+<VirtualHost *:80>
+    ServerName ${IPHARM_DOMAIN}
+
+    ProxyPass /static/ !
+    ProxyPass /media/ !
+    ProxyPass / http://ipharm-app:8000/ nocanon
+    ProxyPassReverse / http://ipharm-app:8000/
+
+    LogLevel ${LOG_LEVEL}
+
+        <Location />
+            <If "env('ENABLE_KERBEROS') == 'True'">
+                    <LimitExcept OPTIONS>
+                    Options None
+                    Order allow,deny
+                    allow from all
+
+                    AuthType Kerberos
+                    AuthName "Kerberos Login"
+                    KrbAuthRealm ${KERBEROS_REALM}
+                    Krb5Keytab /etc/apache2/apache2.keytab
+                    KrbMethodNegotiate On
+                    KrbMethodK5Passwd Off
+                    Require valid-user
+                    RequestHeader set X-Remote-User expr=%{REMOTE_USER}
+                    </LimitExcept>
+            </If>
+        </Location>
+
+    Alias /static/ /ipharm_static/
+    Alias /media/ /ipharm_media/
+
+    <Directory  /ipharm_static>
+        Require all granted
+    </Directory>
+
+    <Directory  /ipharm_media>
+        Require all granted
+    </Directory>
+
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName ${IPHARM_FRONTEND_DOMAIN}
+    DocumentRoot /frontend_ipharm/build/
+    <Directory /frontend_ipharm/build/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        RewriteEngine on
+        RewriteRule ^(index.html)($|/) - [L]
+        RewriteRule ^(?!.*\.).*$ /index.html
+    </Directory>
+    LogLevel ${LOG_LEVEL}
+</VirtualHost>
+
+<VirtualHost *:${IPHARM_FLOWER_PORT}>
+    ServerName ${IPHARM_FLOWER_DOMAIN}
+
+    ProxyPass / http://ipharm-flower:5555/ nocanon
+    ProxyPassReverse / http://ipharm-flower:5555/
+
+    LogLevel ${LOG_LEVEL}
+</VirtualHost>
+
+{% endif %}
+
+
+{% if "iciselniky" in modules  %}
+
+<VirtualHost *:80>
+    ServerName ${ICISELNIKY_DOMAIN}
+
+    ProxyPass /static/ !
+    ProxyPass / http://iciselniky-app:8000/ nocanon
+    ProxyPassReverse / http://iciselniky-app:8000/
+
+    LogLevel ${LOG_LEVEL}
+
+        <Location />
+            <If "env('ENABLE_KERBEROS') == 'True'">
+                    <LimitExcept OPTIONS>
+                    Options None
+                    Order allow,deny
+                    allow from all
+
+                    AuthType Kerberos
+                    AuthName "Kerberos Login"
+                    KrbAuthRealm ${KERBEROS_REALM}
+                    Krb5Keytab /etc/apache2/apache2.keytab
+                    KrbMethodNegotiate On
+                    KrbMethodK5Passwd Off
+                    Require valid-user
+                    RequestHeader set X-Remote-User expr=%{REMOTE_USER}
+                    </LimitExcept>
+            </If>
+        </Location>
+
+    Alias /static/ /iciselniky_static/
+
+    <Directory  /iciselniky_static>
+        Require all granted
+    </Directory>
+
+</VirtualHost>
+
+<VirtualHost *:${ICISELNIKY_FLOWER_PORT}>
+    ServerName ${ICISELNIKY_FLOWER_DOMAIN}
+
+    ProxyPass / http://iciselniky-flower:5555/ nocanon
+    ProxyPassReverse / http://iciselniky-flower:5555/
+
+    LogLevel ${LOG_LEVEL}
+</VirtualHost>
+
+{% endif %}
+
+
+{% if "izadanky" in modules  %}
+
+<VirtualHost *:80>
+    ServerName ${IZADANKY_DOMAIN}
+
+    ProxyPass /static/ !
+    ProxyPass /media/ !
+    ProxyPass / http://izadanky-app:8000/ nocanon
+    ProxyPassReverse / http://izadanky-app:8000/
+
+    LogLevel ${LOG_LEVEL}
+
+        <Location />
+            <If "env('ENABLE_KERBEROS') == 'True'">
+                    <LimitExcept OPTIONS>
+                    Options None
+                    Order allow,deny
+                    allow from all
+
+                    AuthType Kerberos
+                    AuthName "Kerberos Login"
+                    KrbAuthRealm ${KERBEROS_REALM}
+                    Krb5Keytab /etc/apache2/apache2.keytab
+                    KrbMethodNegotiate On
+                    KrbMethodK5Passwd Off
+                    Require valid-user
+                    RequestHeader set X-Remote-User expr=%{REMOTE_USER}
+                    </LimitExcept>
+            </If>
+        </Location>
+
+    Alias /static/ /izadanky_static/
+    Alias /media/ /izadanky_media/
+
+    <Directory  /izadanky_static>
+        Require all granted
+    </Directory>
+
+    <Directory  /izadanky_media>
+        Require all granted
+    </Directory>
+
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName ${IZADANKY_FRONTEND_DOMAIN}
+    DocumentRoot /frontend_izadanky/build/
+    <Directory /frontend_izadanky/build/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        RewriteEngine on
+        RewriteRule ^(index.html)($|/) - [L]
+        RewriteRule ^(?!.*\.).*$ /index.html
+    </Directory>
+    LogLevel ${LOG_LEVEL}
+</VirtualHost>
+
+<VirtualHost *:${IZADANKY_FLOWER_PORT}>
+    ServerName ${IZADANKY_FLOWER_DOMAIN}
+
+    ProxyPass / http://izadanky-flower:5555/ nocanon
+    ProxyPassReverse / http://izadanky-flower:5555/
+
+    LogLevel ${LOG_LEVEL}
+</VirtualHost>
+
+
+{% endif %}
+
+
+<VirtualHost *:${GRAFANA_PORT}>
+    ServerName ${GRAFANA_DOMAIN}
+
+    ProxyPass / http://grafana:3000/ nocanon
+    ProxyPassReverse / http://grafana:3000/
+
+    LogLevel ${LOG_LEVEL}
+</VirtualHost>
