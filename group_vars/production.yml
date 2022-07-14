@@ -1,1 +1,2 @@
-docker_tag: production
+docker_be_tag: production
+docker_fe_tag: production

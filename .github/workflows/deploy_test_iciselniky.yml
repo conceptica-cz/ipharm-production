@@ -1,6 +1,12 @@
 name: Deploy test iciselniky
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      docker_be_tag:
+          default: test
+          description: The tag to use for the backend container.
+          required: true
 
 jobs:
   deploy:
@@ -60,4 +66,4 @@ jobs:
       - name: Deploy
         run: |
           export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i hosts -v deploy_test_iciselniky.yml
+          ansible-playbook -i hosts --extra-vars "docker_be_tag=${{ github.event.inputs.docker_be_tag }}" -v deploy_test_iciselniky.yml

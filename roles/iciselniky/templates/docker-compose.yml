@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   iciselniky-app:
-    image: conceptica/iciselniky_app:{{docker_tag}}
+    image: conceptica/iciselniky_app:{{docker_be_tag}}
     container_name: iciselniky-app
     restart: unless-stopped
     depends_on:
@@ -33,7 +33,7 @@ services:
       - ./_postgres_data_iciselniky:/var/lib/postgresql/data
 
   iciselniky-worker-high-priority:
-    image: conceptica/iciselniky_app:{{docker_tag}}
+    image: conceptica/iciselniky_app:{{docker_be_tag}}
     container_name: iciselniky-worker-high-priority
     restart: unless-stopped
     volumes: *volumes-iciselniky-app
@@ -46,7 +46,7 @@ services:
     command: scripts/start_worker.sh -Q high_priority -n high_priority
 
   iciselniky-worker-low-priority:
-    image: conceptica/iciselniky_app:{{docker_tag}}
+    image: conceptica/iciselniky_app:{{docker_be_tag}}
     container_name: iciselniky-worker-low-priority
     restart: unless-stopped
     volumes: *volumes-iciselniky-app
@@ -59,7 +59,7 @@ services:
     command: scripts/start_worker.sh -Q low_priority -n low_priority
 
   iciselniky-beat:
-    image: conceptica/iciselniky_app:{{docker_tag}}
+    image: conceptica/iciselniky_app:{{docker_be_tag}}
     container_name: iciselniky-beat
     restart: unless-stopped
     volumes: *volumes-iciselniky-app

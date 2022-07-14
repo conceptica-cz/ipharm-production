@@ -1,3 +1,4 @@
-docker_tag: demo
+docker_be_tag: demo
+docker_fe_tag: demo
 docker_data_dir: "/data/docker/containers"
 
