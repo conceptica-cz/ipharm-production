@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  apache:
+    image: conceptica/apache_kerberos
+    container_name: apache
+    restart: unless-stopped
+    volumes:
+      - ./config/:/app/config/
+      - ./keytab:/app/keytab
+{% if "ipharm" in modules %}
+      - ../ipharm/ipharm_static:/ipharm_static
+      - ../ipharm/ipharm_media:/ipharm_media
+      - ../ipharm/frontend_ipharm/:/frontend_ipharm
+{% endif %}
+{% if "iciselniky" in modules %}
+      - ../iciselniky/iciselniky_static:/iciselniky_static
+{% endif %}
+{% if "izadanky" in modules %}
+      - ../izadanky/izadanky_static:/izadanky_static
+#      - ../izadanky/frontend_izadanky:/frontend_izadanky
+{% endif %}
+    env_file:
+      - .envs/.production/.apache
+    ports:
+      - 80:80
+      - 3000:3000
+      - 5555:5555
+    logging: &logging
+      driver: "json-file"
+      options:
+        tag: {{ '"{{.ImageName}}|{{.Name}}"' }}
+    networks:
+        - external
+
+networks:
+  external:
+    name: ipharm-network
