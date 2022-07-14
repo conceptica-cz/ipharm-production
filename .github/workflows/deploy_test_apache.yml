@@ -20,7 +20,7 @@ jobs:
         run: |
           mkdir -p .envs/.production
           touch .envs/.production/.apache
-          ecno "LOG_LEVEL=debug" > .envs/.production/.apache
+          echo "LOG_LEVEL=debug" > .envs/.production/.apache
           echo "IPHARM_DOMAIN=${{ secrets.TEST_IPHARM_DOMAIN }}" >>  .envs/.production/.apache
           echo "ICISELNIKY_DOMAIN=${{ secrets.TEST_ICISELNIKY_DOMAIN }}" >>  .envs/.production/.apache
           echo "IPHARM_FRONTEND_DOMAIN=${{ secrets.TEST_IPHARM_FRONTEND_DOMAIN }}" >>  .envs/.production/.apache
