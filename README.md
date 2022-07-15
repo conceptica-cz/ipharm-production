@@ -3,7 +3,7 @@
 ## Deployment to test environment with GitHub Actions
 
 You can deploy new docker images to the test environment using 
-the "Deploy test..." workflows at https://github.com/conceptica-cz/ipharm-production/actions/workflows/
+the "Deploy test..." workflows at https://github.com/conceptica-cz/ipharm-production/actions/
 
 ## Deployment with ansible-playbook
 
