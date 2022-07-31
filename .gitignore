@@ -19,3 +19,4 @@ _postgres_data_izadanky
 _grafana
 dump.sql
 hosts
+hosts.multiple

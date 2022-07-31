@@ -11,13 +11,14 @@
 
     LogLevel ${LOG_LEVEL}
 
-        <Location />
+        <Location ~ (/admin/login/|/api/v1/login_kerberos/)>
             <If "env('ENABLE_KERBEROS') == 'True'">
                     <LimitExcept OPTIONS>
                     Options None
                     Order allow,deny
                     allow from all
-
+                    Header always set Access-Control-Allow-Origin "${IPHARM_CORS_ALLOWED_ORIGINS}"
+                    Header always set Access-Control-Allow-Credentials true
                     AuthType Kerberos
                     AuthName "Kerberos Login"
                     KrbAuthRealm ${KERBEROS_REALM}
@@ -82,7 +83,7 @@
 
     LogLevel ${LOG_LEVEL}
 
-        <Location />
+        <Location ~ (/admin/login/|/api/v1/login_kerberos/)>
             <If "env('ENABLE_KERBEROS') == 'True'">
                     <LimitExcept OPTIONS>
                     Options None
@@ -135,13 +136,14 @@
 
     LogLevel ${LOG_LEVEL}
 
-        <Location />
+        <Location ~ (/admin/login/|/api/v1/login_kerberos/)>
             <If "env('ENABLE_KERBEROS') == 'True'">
                     <LimitExcept OPTIONS>
                     Options None
                     Order allow,deny
                     allow from all
-
+                    Header always set Access-Control-Allow-Origin "${IZADANKY_CORS_ALLOWED_ORIGINS}"
+                    Header always set Access-Control-Allow-Credentials true
                     AuthType Kerberos
                     AuthName "Kerberos Login"
                     KrbAuthRealm ${KERBEROS_REALM}

@@ -41,6 +41,7 @@ jobs:
           echo "IZADANKY_TOKEN=${{ secrets.TEST_IPHARM_IZADANKY_TOKEN }}" >>  .envs/.production/.ipharm_app
           echo "BASE_ICISELNIKY_URL=${{ secrets.TEST_IPHARM_BASE_ICISELNIKY_URL }}" >>  .envs/.production/.ipharm_app
           echo "ICISELNIKY_TOKEN=${{ secrets.TEST_IPHARM_ICISELNIKY_TOKEN }}" >>  .envs/.production/.ipharm_app
+          echo "ENABLE_KERBEROS=False" >>  .envs/.production/.ipharm_app
           touch .envs/.production/.ipharm_postgres
           echo POSTGRES_HOST=ipharm-postgres >>  .envs/.production/.ipharm_postgres
           echo POSTGRES_PORT=5432 >>  .envs/.production/.ipharm_postgres
